@@ -1,5 +1,5 @@
 <template>
-    <div class="card" style="width: 18rem;">
+    <div class="card">
       <img src="../assets/logo.png" class="card-img-top">
       <div class="card-body">
         <p class="card-text">{{name}}</p>
@@ -26,5 +26,13 @@
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
   <style scoped>
+    .card {
+      width: 33%;
+    }
+
+    .card-body {
+      display: flex;
+      justify-content: center;
+    }
   </style>
   

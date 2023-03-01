@@ -2,10 +2,12 @@
     <h2>
       Getränkekühlschrank
     </h2>
-    <card-component 
+    <div class="card-collection">
+      <card-component 
       v-for="user in users" :vorname="user.vorname" :nachname="user.nachname" :id="user.id" :key="user.id" 
       v-bind:card-id="user.id" data-bs-toggle="modal" data-bs-target="#userModal"
     />
+    </div>
     <user-modal />
     <button type="button" class="btn btn-primary">+</button>
 </template>
@@ -27,6 +29,7 @@ export default {
         {id: 1, vorname: "Michael", nachname: "Kleefisch"},
         {id: 2, vorname: "Tim", nachname: "Kleefisch"},
         {id: 3, vorname: "Stefan", nachname: "Kleefisch"},
+        {id: 4, vorname: "Sophie", nachname: "Kasper"},
       ]
     }
   },
@@ -53,4 +56,10 @@ export default {
 </script>
 
 <style>
+.card-collection {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
 </style>
