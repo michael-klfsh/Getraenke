@@ -10,18 +10,21 @@
     />
     </div>
     <user-modal :reset="resetData" @resetted="resetted"/>
-    <button type="button" id="add-user" class="btn btn-primary">+</button>
+    <add-user-modal/>
+    <button type="button" id="add-user" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">+</button>
 </template>
 
 <script>
 import CardComponent from './components/Card.vue'
 import UserModal from './components/UserModal.vue'
+import AddUserModal from './components/AddUserModal.vue'
 
 export default {
   name: 'App',
   components: {
     CardComponent,
-    UserModal
+    UserModal,
+    AddUserModal
   },
 
   data() {
