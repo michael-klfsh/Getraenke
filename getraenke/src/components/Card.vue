@@ -11,8 +11,16 @@
   export default {
     name: 'CardComponent',
     props: {
-      name: String
-    }
+      vorname: String,
+      nachname: String,
+      id: Number,
+    },
+
+    computed: {
+      name() {
+        return this.vorname + ' ' + this.nachname
+      }
+    },
   }
   </script>
   

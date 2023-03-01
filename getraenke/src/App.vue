@@ -2,18 +2,10 @@
     <h2>
       Getränkekühlschrank
     </h2>
-
-    <div class="row">
-      <div class="col-md-4">
-        <card-component name="Michael Kleefisch" data-bs-toggle="modal" data-bs-target="#userModal" data-bs-userId="1"/>
-      </div>
-      <div class="col-md-4">
-        <card-component name="Tim Kleefisch" data-bs-toggle="modal" data-bs-target="#userModal" data-bs-userId="2"/>
-      </div>
-      <div class="col-md-4">
-        <card-component name="Stefan Kleefisch" data-bs-toggle="modal" data-bs-target="#userModal" data-bs-userId="3"/>
-      </div>
-    </div>
+    <card-component 
+      v-for="user in users" :vorname="user.vorname" :nachname="user.nachname" :id="user.id" :key="user.id" 
+      v-bind:card-id="user.id" data-bs-toggle="modal" data-bs-target="#userModal"
+    />
     <user-modal />
     <button type="button" class="btn btn-primary">+</button>
 </template>
@@ -29,13 +21,23 @@ export default {
     UserModal
   },
 
+  data() {
+    return {
+      users: [
+        {id: 1, vorname: "Michael", nachname: "Kleefisch"},
+        {id: 2, vorname: "Tim", nachname: "Kleefisch"},
+        {id: 3, vorname: "Stefan", nachname: "Kleefisch"},
+      ]
+    }
+  },
+
   mounted() {
     const exampleModal = document.getElementById('userModal')
     exampleModal.addEventListener('show.bs.modal', event => {
       // Button that triggered the modal
       const button = event.relatedTarget
       // Extract info from data-bs-* attributes
-      const recipient = button.getAttribute('data-bs-userId')
+      const recipient = button.getAttribute('card-id')
       // If necessary, you could initiate an AJAX request here
       // and then do the updating in a callback.
       //
