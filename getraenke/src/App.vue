@@ -10,7 +10,7 @@
     />
     </div>
     <user-modal :reset="resetData" @resetted="resetted"/>
-    <button type="button" class="btn btn-primary">+</button>
+    <button type="button" id="add-user" class="btn btn-primary">+</button>
 </template>
 
 <script>
@@ -67,10 +67,23 @@ export default {
 </script>
 
 <style>
-.card-collection {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
+  #add-user {
+    width: 50px;
+    height: 50px;
+    float: right;
+    border-radius: 25px;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 100%;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+  }
+
+  .card-collection {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 </style>
