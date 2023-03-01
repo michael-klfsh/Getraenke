@@ -6,9 +6,10 @@
       <card-component 
       v-for="user in users" :vorname="user.vorname" :nachname="user.nachname" :id="user.id" :key="user.id" 
       v-bind:card-id="user.id" data-bs-toggle="modal" data-bs-target="#userModal"
+      @click="reset"
     />
     </div>
-    <user-modal />
+    <user-modal :reset="resetData" @resetted="resetted"/>
     <button type="button" class="btn btn-primary">+</button>
 </template>
 
@@ -30,7 +31,8 @@ export default {
         {id: 2, vorname: "Tim", nachname: "Kleefisch"},
         {id: 3, vorname: "Stefan", nachname: "Kleefisch"},
         {id: 4, vorname: "Sophie", nachname: "Kasper"},
-      ]
+      ],
+      resetData: false
     }
   },
 
@@ -52,6 +54,15 @@ export default {
       modalBodyInput.value = recipient
     })
   },
+
+  methods: {
+    reset() {
+      this.resetData = true
+    },
+    resetted() {
+      this.resetData = false
+    }
+  }
 }
 </script>
 

@@ -8,10 +8,8 @@
             </div>
             <div class="modal-body">
                 <form>
-                <div class="mb-3">
-                    <label for="recipient-name" class="col-form-label">Recipient:</label>
-                    <input type="text" class="form-control" id="recipient-name">
-                </div>
+                <buy-drink name="Spezi" :reset="reset" @resetted="sendResetted"/>
+                <buy-drink name="Bier" :reset="reset" @resetted="sendResetted"/>
                 <div class="mb-3">
                     <label for="message-text" class="col-form-label">Message:</label>
                     <textarea class="form-control" id="message-text"></textarea>
@@ -28,12 +26,24 @@
   </template>
   
   <script>
-  export default {
-    name: 'ModalComponent',
-    props: {
-      data: String
+    import BuyDrink from "./BuyDrink.vue"
+
+    export default {
+        name: 'ModalComponent',
+        components: {
+            BuyDrink
+        },
+        props: {
+            data: String,
+            reset: Boolean
+        },
+
+        methods: {
+            sendResetted() {
+                this.$emit("resetted")
+            }
+        }
     }
-  }
   </script>
   
   <!-- Add "scoped" attribute to limit CSS to this component only -->
