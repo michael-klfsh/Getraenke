@@ -8,8 +8,8 @@
             </div>
             <div class="modal-body">
                 <div id="drink-form">
-                    <buy-drink name="Spezi" price="0,80" :reset="reset" @resetted="sendResetted"/>
-                    <buy-drink name="Bier" price="0,70" :reset="reset" @resetted="sendResetted"/>
+                    <buy-drink v-for="drink in drinks" :key="drink.id"
+                        :name="drink.name" :price="drink.preis" :reset="reset" @resetted="sendResetted"/>
                 </div>
                 <!--<div>
                     <p>Spezi: Anzahl 8 Gesamt: 6,40€</p>
@@ -37,6 +37,15 @@
         props: {
             data: String,
             reset: Boolean
+        },
+
+        data() {
+            return {
+                drinks: [
+                    {id: 1, name: 'Spezi', preis: 0.8},
+                    {id: 2, name: 'Bier', preis: 0.7}
+                ]
+            }
         },
 
         methods: {
