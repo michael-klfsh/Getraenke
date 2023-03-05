@@ -5,9 +5,9 @@ module.exports = app => {
 
     router.post("/", users.create);
 
-    router.get("/:id", users.findOne);
+    router.get("/:id", users.findById);
 
-    router.delete("/:id", users.delete);
+    router.delete("/:id", users.remove);
 
     router.post("/:id/getraenk", );
 
