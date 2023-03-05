@@ -1,7 +1,4 @@
-const db = require("../models");
-const User = db.user;
-const Kauf = db.kauf;
-const Op = db.Sequelize.Op;
+const User = require("../models/user.model.js");
 
 exports.create = (req, res) => {
     if(!req.body.vorname) {     //TODO Check more params
@@ -19,60 +16,61 @@ exports.create = (req, res) => {
         email: req.body.email,
     };
 
-    User.create(user)
-    .then(data => {
-        res.send(data);
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the User."
-        });
-    });
+    User.create(user, (err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while creating the Tutorial."
+          });
+        else {
+            res.send(data);
+        }
+      });
 };
 
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    User.findByPk(id)
-    .then(data => {
-        if(data) {
-            res.send(data);
+    User.findById(id, (err, data) => {
+        if(err) {
+            if(err.kind === 'not_found') {
+                res.status(404).send({
+                    message: `Cannot find User with id=${id}.`
+                });
+            }
+            else {
+                res.status(500).send({
+                    message: `Error retrieving User with id=${id}.`
+                });
+            }
         }
         else {
-            res.status(404).send({
-                message: `Cannot find User with id=${id}.`
-            });
+            res.send(data);
         }
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: `Error retrieving User with id=${id}.`
-        });
     });
 };
 
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    User.destroy({
-        where: {id: id}
-    })
-    .then(num => {
-        if(num == 1) {
+    User.remove(id, (err, date) => {
+        if(err) {
+            if(err.kind === 'not_found') {
+                res.status(404).send({
+                    message: `Not found User with id ${id}.`
+                });
+            }
+            else {
+                res.status(500).send({
+                    message: `Could not delete User with id=${id}`
+                });
+            }
+        }
+        else {
             res.send({
                 message: "User was deleted successfully!"
             });
         }
-        else {
-            res.send({
-                message: `Cannot delete User with id=${id}.`
-            });
-        }
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: `Could not delete User with id=${id}`
-        });
     });
 };
 
@@ -115,7 +113,7 @@ exports.findBuy = (req, res) => {
     }
 
     if(!req.body.endTime) {
-        
+
     }
     else {
 
