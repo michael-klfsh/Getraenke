@@ -1,25 +1,43 @@
 <template>
-    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="userModalLabel">New message</h1>
+                <h1 class="modal-title fs-5" id="addUserModalLabel">Neuer Nutzer</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div id="drink-form">
-                    <buy-drink v-for="drink in drinks" :key="drink.id"
-                        :name="drink.name" :price="drink.preis" :reset="reset" @resetted="sendResetted"/>
+                <div id="register-form">
+                    <div class="form-group">
+                        <label for="firstName">Vorname</label>
+                        <input type="text" class="form-control" id="firstName" placeholder="Vorname">
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Nachname</label>
+                        <input type="text" class="form-control" id="lastName" placeholder="Nachname">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Adresse</label>
+                        <input type="email" class="form-control" id="email" placeholder="E-Mail">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="isFaho" @click="checkboxClick">
+                        <label class="form-check-label" for="isFaho">
+                            Ich wohne im FAHO
+                        </label>
+                        <input type="number" class="form-control" id="roomNo" placeholder="Zimmer-Nr" disabled>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="hasSplitwise">
+                        <label class="form-check-label" for="hasSplitwise">
+                            Ich bin in der Splitwise Gruppe
+                        </label>
+                    </div>
                 </div>
-                <!--<div>
-                    <p>Spezi: Anzahl 8 Gesamt: 6,40€</p>
-                    <p>Bier: Anzahl 10 Gesamt: 7,00€</p>
-                    <p>Insgesamt: 13,40€</p>
-                </div>-->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-                <button type="submit"  class="btn btn-primary" data-bs-dismiss="modal" @click="buyDrinks">Kaufen</button>
+                <button type="submit"  class="btn btn-primary" data-bs-dismiss="modal" @click="register">Registrieren</button>
             </div>
             </div>
         </div>
@@ -27,42 +45,29 @@
   </template>
   
   <script>
-    import BuyDrink from "./BuyDrink.vue"
-
     export default {
         name: 'ModalComponent',
-        components: {
-            BuyDrink
-        },
-        props: {
-            data: String,
-            reset: Boolean
-        },
-
-        data() {
-            return {
-                drinks: [
-                    {id: 1, name: 'Spezi', preis: 0.8},
-                    {id: 2, name: 'Bier', preis: 0.7}
-                ]
-            }
-        },
-
         methods: {
-            sendResetted() {
-                this.$emit("resetted")
+            checkboxClick() {
+                let checkbox = document.getElementById('isFaho')
+                if(checkbox.checked) {
+                    document.getElementById('roomNo').disabled = false
+                }
+                else {
+                    document.getElementById('roomNo').disabled = true
+                    document.getElementById('roomNo').value = ''
+                }
             },
 
-            buyDrinks() {
-                let form = document.getElementById('drink-form')
-                let drinks = form.getElementsByTagName('input')
-                for(let i=0; i<drinks.length; i++) {
-                    let price = drinks[i].attributes['price'].value
-                    let amount = drinks[i].value
-                    console.log(amount + ' ' + price)
-                }
-
-
+            register() {
+                let vorname = document.getElementById('firstName').value
+                let nachname = document.getElementById('lastName').value
+                let email = document.getElementById('email').value
+                let isFaho = document.getElementById('isFaho').checked
+                let roomNr = document.getElementById('roomNo').value
+                let hasSplitwise = document.getElementById('hasSplitwise').checked
+                
+                console.log('Nutzer: ' + vorname + ', ' + nachname + '(' + email + ', ' + isFaho + ', ' + roomNr + ', ' + hasSplitwise + ')')
             }
         }
     }
