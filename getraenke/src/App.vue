@@ -5,11 +5,11 @@
     <div class="card-collection">
       <card-component 
       v-for="user in users" :vorname="user.vorname" :nachname="user.nachname" :id="user.id" :key="user.id" 
-      v-bind:card-id="user.id" data-bs-toggle="modal" data-bs-target="#userModal"
+      v-bind:card-id="user.id" v-bind:user-name="user.vorname" data-bs-toggle="modal" data-bs-target="#userModal"
       @click="reset"
     />
     </div>
-    <user-modal :reset="resetData" @resetted="resetted"/>
+    <user-modal :data="userinfos" :reset="resetData" @resetted="resetted"/>
     <add-user-modal/>
     <button type="button" id="add-user" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">+</button>
 </template>
@@ -35,24 +35,18 @@ export default {
         {id: 3, vorname: "Stefan", nachname: "Kleefisch"},
         {id: 4, vorname: "Sophie", nachname: "Kasper"},
       ],
-      resetData: false
+      resetData: false,
+      userinfos: {id: "", name: ""}
     }
   },
 
-  mounted() {
-    const userModal = document.getElementById('userModal')
-    userModal.addEventListener('show.bs.modal', event => {
-      // Button that triggered the modal
-      const button = event.relatedTarget
-      const userId = button.getAttribute('card-id')
-
-      userModal.dataset.userId = userId
-    })
-  },
-
   methods: {
-    reset() {
+    reset(event) {
       this.resetData = true
+      let parent = event.target.parentElement
+
+      this.userinfos.id = parent.getAttribute('card-id')
+      this.userinfos.name = parent.getAttribute('user-name')
     },
     resetted() {
       this.resetData = false

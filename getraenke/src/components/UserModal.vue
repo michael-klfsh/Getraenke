@@ -1,9 +1,9 @@
 <template>
-    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-userId="-1">
+    <div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="userModalLabel">Kaufe Getränke</h1>
+                <h1 class="modal-title fs-5" id="userModalLabel">{{ data.name }}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -35,7 +35,7 @@
             BuyDrink
         },
         props: {
-            data: String,
+            data: Object,
             reset: Boolean
         },
 
@@ -56,7 +56,7 @@
             buyDrinks() {
                 let form = document.getElementById('drink-form')
                 let drinks = form.getElementsByTagName('input')
-                let userId = document.getElementById('userModal').dataset.userId
+                let userId = this.data.id
                 console.log('UserId: ' + userId)
                 for(let i=0; i<drinks.length; i++) {
                     let price = drinks[i].attributes['price'].value
