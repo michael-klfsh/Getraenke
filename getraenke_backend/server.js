@@ -25,6 +25,8 @@ app.get("/", (req, res) => {
     res.json({ message: "Welcome to the application." });
 });
 
+require("./app/routes/user.routes")(app);
+
 //Setzt Port auf 8080 (falls keine Umgebungsvariable PORT existiert)
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
