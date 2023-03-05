@@ -43,21 +43,15 @@ const User = function(user) {
     });
   };
   
-  User.getAll = (title, result) => {
+  User.getAll = (result) => {
     let query = "SELECT * FROM User";
-  
-    if (title) {
-      query += ` WHERE title LIKE '%${title}%'`;
-    }
   
     sql.query(query, (err, res) => {
       if (err) {
-        console.log("error: ", err);
         result(null, err);
         return;
       }
-  
-      console.log("users: ", res);
+
       result(null, res);
     });
   };
