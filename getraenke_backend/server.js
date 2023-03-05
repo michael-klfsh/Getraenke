@@ -17,10 +17,6 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const db = require("./app/models");
-//force: resync databse (drop existing tables)
-db.sequelize.sync({ force:true });
-
 app.get("/", (req, res) => {
     res.json({ message: "Welcome to the application." });
 });
