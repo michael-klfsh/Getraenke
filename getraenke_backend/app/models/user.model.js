@@ -18,8 +18,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN
         },
         zimmerNr: {
-            type: Sequelize.INT
+            type: Sequelize.INTEGER
         }
+    }, {
+        timestamps: false
     });
 
     return User;

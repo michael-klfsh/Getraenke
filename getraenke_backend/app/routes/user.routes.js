@@ -9,5 +9,16 @@ module.exports = app => {
 
     router.delete("/:id", users.delete);
 
+    router.post("/:id/getraenk", );
+
+    router.get("/:id/from/:start-time", );
+
+    router.get("/:id/from/:start-time/to/:end-time", );
+
+    router.get("/:id/getraenk/:getraenk-id/from/:start-time", );
+
+    router.get("/:id/getraenk/:getraenk-id/from/:start-time/to/:end-time", );
+
+
     app.use('/api/users', router);
 };

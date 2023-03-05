@@ -20,5 +20,16 @@ db.sequelize = sequelize;
 
 db.users = require("./user.model.js")(sequelize, Sequelize);
 db.getraenke = require("./getraenke.model.js")(sequelize, Sequelize);
+//db.kauf = require("./kauf.model.js")(sequelize, Sequelize);
+
+db.users.belongsToMany(db.getraenke, {
+    through: "kauf",
+    foreignKey: "userId",
+});
+
+db.getraenke.belongsToMany(db.users, {
+    through: "kauf",
+    foreignKey: "getraenkeId",
+});
 
 module.exports = db;

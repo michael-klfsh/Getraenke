@@ -1,5 +1,6 @@
 const db = require("../models");
 const User = db.user;
+const Kauf = db.kauf;
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
@@ -29,10 +30,6 @@ exports.create = (req, res) => {
     });
 };
 
-/*exports.findAll = (req, res) => {
-
-};*/
-
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
@@ -54,10 +51,6 @@ exports.findOne = (req, res) => {
     });
 };
 
-/*exports.update = (req, res) => {
-
-};*/
-
 exports.delete = (req, res) => {
     const id = req.params.id;
 
@@ -78,11 +71,53 @@ exports.delete = (req, res) => {
     })
     .catch(err => {
         res.status(500).send({
-            message: `ould not delete User with id=${id}`
+            message: `Could not delete User with id=${id}`
         });
     });
 };
 
-/*exports.deleteAll = (req, res) => {
+exports.addBuy = (req, res) => {
+    const id = req.params.id;
 
-};*/
+    if(!req.body.getraenkeId || !req.body.anzahl) {
+        res.status(400).send({
+            message: "Content can not be empty!"
+        });
+        return;
+    }
+
+    const kauf = {
+        getraenkeId: req.body.getraenkeId,
+        userId: req.params.id,
+        anzahl: req.body.anzahl
+    };
+
+    Kauf.create(kauf)
+    .then(data => {
+        res.send(data);
+    })
+    .catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while creating the Kauf."
+        });
+    });
+};
+
+exports.findBuy = (req, res) => {
+    const id = req.params.id;
+    const getraenkeId = req.params.getraenkeId ? req.params.getraenkeId : -1;
+
+    if(!req.body.startTime) {
+        res.status(400).send({
+            message: "Provide a starting time!"
+        });
+        return;
+    }
+
+    if(!req.body.endTime) {
+        
+    }
+    else {
+
+    }
+};

@@ -6,6 +6,8 @@ module.exports = (sequelize, Sequelize) => {
         preis: {
             type: Sequelize.DOUBLE
         }
+    }, {
+        timestamps: false
     });
 
     return Getraenk;
