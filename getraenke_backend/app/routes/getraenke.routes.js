@@ -8,6 +8,7 @@ module.exports = app => {
     router.get("/:id", getraenke.findOne);
 
     router.delete("/:id", getraenke.delete);
+    
 
     app.use('/api/getraenke', router);
 };

@@ -18,7 +18,7 @@ Kauf.create = (newKauf, result) => {
     });
 }
 
-Kauf.findById = (userId, getraenkId, timestamp, result) => {
+Kauf.getUserDrinkAfterTimestamp = (userId, getraenkId, timestamp, result) => {
     sql.query(`SELECT * FROM UserKauftGetraenk WHERE userId = ${userId} AND getraenkId = ${getraenkId} AND timestamp >= ${timestamp}`, (err, res) => {
         if(err) {
             result(err, null);
@@ -45,7 +45,7 @@ Kauf.getAllByUser = (userId, result) => {
     });
 };
 
-Kauf.getFromUserTimestamp = (userId, timestamp, result) => {
+Kauf.getFromUserAfterTimestamp = (userId, timestamp, result) => {
     sql.query(`SELECT * FROM UserKauftGetraenk WHERE userID = ${userId} AND timestamp >= ${timestamp}`, (err, res) => {
         if(err) {
             result(null, err);
@@ -56,7 +56,7 @@ Kauf.getFromUserTimestamp = (userId, timestamp, result) => {
     });
 };
 
-Kauf.getAfter = (timestamp, result) => {
+Kauf.getAllAfterTimestamp = (timestamp, result) => {
     sql.query(`SELECT * FROM UserKauftGetraenk WHERE timestamp >= ${timestamp}`, (err, res) => {
         if(err) {
             result(null, err);

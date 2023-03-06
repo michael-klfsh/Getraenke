@@ -9,15 +9,13 @@ module.exports = app => {
 
     router.delete("/:id", users.delete);
 
-    router.post("/:id/getraenk", );
+    router.post("/:id/getraenk", user.addBuy);
 
-    router.get("/:id/from/:start-time", );
+    router.get("/:id/getraenk", user.allBuysOfUser);
 
-    router.get("/:id/from/:start-time/to/:end-time", );
+    router.get("/:id/from/:start-time", user.findBuy);
 
-    router.get("/:id/getraenk/:getraenk-id/from/:start-time", );
-
-    router.get("/:id/getraenk/:getraenk-id/from/:start-time/to/:end-time", );
+    router.get("/:id/getraenk/:getraenk-id/from/:start-time", user.findBuy);
 
 
     app.use('/api/users', router);
