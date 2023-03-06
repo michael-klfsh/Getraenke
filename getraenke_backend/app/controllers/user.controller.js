@@ -11,7 +11,7 @@ exports.create = (req, res) => {
     const user = {
         vorname: req.body.vorname,
         nachname: req.body.nachname,
-        isFAHO: req.body.isFAHO,
+        isFaho: req.body.isFAHO,
         zimmerNr: req.body.zimmerNr ? req.body.zimmerNr : undefined,
         splitwise: req.body.splitwise,
         email: req.body.email,
