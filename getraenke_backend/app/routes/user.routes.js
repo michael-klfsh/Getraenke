@@ -1,13 +1,13 @@
 module.exports = app => {
-    const users = require("../controllers/user.controller.js");
+    const user = require("../controllers/user.controller.js");
 
     var router = require("express").Router();
 
-    router.post("/", users.create);
+    router.post("/", user.create);
 
-    router.get("/:id", users.findOne);
+    router.get("/:id", user.findOne);
 
-    router.delete("/:id", users.delete);
+    router.delete("/:id", user.delete);
 
     router.post("/:id/getraenk", user.addBuy);
 
@@ -18,5 +18,5 @@ module.exports = app => {
     router.get("/:id/getraenk/:getraenk-id/from/:start-time", user.findBuy);
 
 
-    app.use('/api/users', router);
+    app.use('/api/user', router);
 };

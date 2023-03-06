@@ -33,7 +33,7 @@ Getraenk.findById = (id, result) => {
     });
 };
 
-User.getAll = (result) => {
+Getraenk.getAll = (result) => {
     let query = "SELECT * FROM Getraenke";
   
     sql.query(query, (err, res) => {
