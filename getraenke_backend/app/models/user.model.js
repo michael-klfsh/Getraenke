@@ -1,3 +1,4 @@
+const connection = require("./db.js");
 const sql = require("./db.js");
 
 
@@ -12,7 +13,7 @@ const User = function(user) {
   };
   
   User.create = (newUser, result) => {
-    sql.query("INSERT INTO User SET ?", newUser, (err, res) => {
+    sql.query("INSERT INTO Nutzer SET ?", newUser, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(err, null);
@@ -25,26 +26,27 @@ const User = function(user) {
   };
   
   User.findById = (id, result) => {
-    sql.query(`SELECT * FROM User WHERE id = ${id}`, (err, res) => {
-      if (err) {
+    sql.then(connection => {
+      connection.query(`SELECT * FROM Nutzer WHERE id = ${id}`)
+      .then(rows => {
+        if (rows.length) {
+          console.log("found user: ", rows[0]);
+          result(null, rows[0]);
+          return;
+        }
+        console.log("not found");
+        result({ kind: "not_found" }, null);
+      })
+      .catch(err => {
         console.log("error: ", err);
         result(err, null);
         return;
-      }
-  
-      if (res.length) {
-        console.log("found user: ", res[0]);
-        result(null, res[0]);
-        return;
-      }
-  
-      // not found User with the id
-      result({ kind: "not_found" }, null);
+      });
     });
   };
   
   User.getAll = (result) => {
-    let query = "SELECT * FROM User";
+    let query = "SELECT * FROM Nutzer";
   
     sql.query(query, (err, res) => {
       if (err) {
@@ -57,7 +59,7 @@ const User = function(user) {
   };
   
   User.remove = (id, result) => {
-    sql.query("DELETE FROM User WHERE id = ?", id, (err, res) => {
+    sql.query("DELETE FROM Nutzer WHERE id = ?", id, (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(null, err);
@@ -76,7 +78,7 @@ const User = function(user) {
   };
   
   User.removeAll = result => {
-    sql.query("DELETE FROM User", (err, res) => {
+    sql.query("DELETE FROM Nutzer", (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(null, err);
