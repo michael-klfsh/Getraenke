@@ -12,57 +12,60 @@ exports.create = (req, res) => {
         preis: req.body.preis
     };
 
-    Getraenk.create(getraenk)
-    .then(data => {
-        res.send(data);
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the drink."
-        });
-    })
+    Getraenk.create(getraenk, (err, data) => {
+        if(err) {
+            res.status(500).send({
+                message: err.message || "Some error occurred while creating the drink."
+            });
+        }
+        else {
+            res.send(data);
+        }
+    });
 };
 
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    Getraenk.findById(id)
-    .then(data => {
-        res.send(data);
-    })
-    .catch(err => {
-        if(err.kind === 'not_found') {
-            res.status(404).send({
-                message: `Cannot find Getraenk with id=${id}.`
-            });
+    Getraenk.findById(id, (err, data) => {
+        if(err) {
+            if(err.kind === 'not_found') {
+                res.status(404).send({
+                    message: `Cannot find Getraenk with id=${id}.`
+                });
+            }
+            else {
+                res.status(500).send({
+                    message: `Error retrieving Getraenk with id=${id}.`
+                });
+            }
         }
         else {
-            res.status(500).send({
-                message: `Error retrieving Getraenk with id=${id}.`
-            });
+            res.send(data);
         }
-    })
+    });
 };
 
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Getraenk.remove(id)
-    .then(data => {
-        res.send({
-            message: "User was deleted successfully!"
-        });
-    })
-    .catch(err => {
-        if(err.kind === 'not_found') {
-            res.status(404).send({
-                message: `Not found User with id ${id}.`
-            });
+    Getraenk.remove(id, (err, date) => {
+        if(err) {
+            if(err.kind === 'not_found') {
+                res.status(404).send({
+                    message: `Not found User with id ${id}.`
+                });
+            }
+            else {
+                res.status(500).send({
+                    message: `Could not delete User with id=${id}`
+                });
+            }
         }
         else {
-            res.status(500).send({
-                message: `Could not delete User with id=${id}`
+            res.send({
+                message: "User was deleted successfully!"
             });
         }
-    })
+    });
 };

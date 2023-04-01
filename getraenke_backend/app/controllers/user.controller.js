@@ -17,58 +17,63 @@ exports.create = (req, res) => {
         email: req.body.email,
     };
 
-    User.create(user)
-    .then(data => {
-        res.send(data);
-    })
-    .catch(err => {
-        res.status(500).send({
+    User.create(user, (err, data) => {
+        if (err) {
+          res.status(500).send({
             message:
               err.message || "Some error occurred while creating the Tutorial."
-        });
-    })
+          });
+        }
+        else {
+            res.send(data);
+        }
+      });
 };
 
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    User.findById(id)
-    .then(data => {
-        res.send(data);
-    })
-    .catch(err => {
-        if(err.kind === 'not_found') {
-            res.status(404).send({
-                message: `Cannot find User with id=${id}.`
-            });
+    User.findById(id, (err, data) => {
+        if(err) {
+            if(err.kind === 'not_found') {
+                res.status(404).send({
+                    message: `Cannot find User with id=${id}.`
+                });
+            }
+            else {
+                res.status(500).send({
+                    message: `Error retrieving User with id=${id}.`
+                });
+            }
         }
         else {
-            res.status(500).send({
-                message: `Error retrieving User with id=${id}.`
-            });
+            res.send(data);
         }
-    })
+    });
 };
 
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    User.remove(id)
-    .then(data => {
-        res.send({message: "User was deleted successfully!"});
-    })
-    .catch(err => {
-        if(err.kind === 'not_found') {
-            res.status(404).send({
-                message: `Not found User with id ${id}.`
-            });
+    User.remove(id, (err, data) => {
+        if(err) {
+            if(err.kind === 'not_found') {
+                res.status(404).send({
+                    message: `Not found User with id ${id}.`
+                });
+            }
+            else {
+                res.status(500).send({
+                    message: `Could not delete User with id=${id}`
+                });
+            }
         }
         else {
-            res.status(500).send({
-                message: `Could not delete User with id ${id}.`
+            res.send({
+                message: "User was deleted successfully!"
             });
         }
-    })
+    });
 };
 
 exports.addBuy = (req, res) => {
@@ -87,15 +92,16 @@ exports.addBuy = (req, res) => {
         anzahl: req.body.anzahl
     };
 
-    Kauf.create(kauf)
-    .then(data => {
-        res.send(data);
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occured while creating the buy."
-        });
-    })
+    Kauf.create(kauf, (err, data) => {
+        if(err) {
+            res.status(500).send({
+                message: err.message || "Some error occured while creating the buy."
+            });
+        }
+        else {
+            res.send(data);
+        }
+    });
 };
 
 exports.findBuy = (req, res) => {
@@ -110,60 +116,63 @@ exports.findBuy = (req, res) => {
     }
 
     if(!getraenkeId) {
-        Kauf.getFromUserAfterTimestamp(id, req.body.startTime)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            if(err.kind === 'not_found') {
-                res.status(404).send({
-                    message: `Cannot find Kauf with userId=${userid} after ${req.body.startTime}.`
-                });
+        Kauf.getFromUserAfterTimestamp(id, req.body.startTime, (err, data) => {
+            if(err) {
+                if(err.kind === 'not_found') {
+                    res.status(404).send({
+                        message: `Cannot find Kauf with userId=${userid} after ${req.body.startTime}.`
+                    });
+                }
+                else {
+                    res.status(500).send({
+                        message: `Error retrieving Kauf userId=${userid} after ${req.body.startTime}.`
+                    });
+                }
             }
             else {
-                res.status(500).send({
-                    message: `Error retrieving Kauf userId=${userid} after ${req.body.startTime}.`
-                });
+                res.send(data);
             }
         })
     }
     else {
-        Kauf.getUserDrinkAfterTimestamp(id, getraenkeId, req.body.startTime)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            if(err.kind === 'not_found') {
-                res.status(404).send({
-                    message: `Cannot find Kauf with userId=${userid}, getraenkeId=${getraenkeId} after ${req.body.startTime}.`
-                });
+        Kauf.getUserDrinkAfterTimestamp(id, getraenkeId, req.body.startTime, (err, data) => {
+            if(err) {
+                if(err.kind === 'not_found') {
+                    res.status(404).send({
+                        message: `Cannot find Kauf with userId=${userid}, getraenkeId=${getraenkeId} after ${req.body.startTime}.`
+                    });
+                }
+                else {
+                    res.status(500).send({
+                        message: `Error retrieving Kauf userId=${userid}, getraenkeId=${getraenkeId} after ${req.body.startTime}.`
+                    });
+                }
             }
             else {
-                res.status(500).send({
-                    message: `Error retrieving Kauf userId=${userid}, getraenkeId=${getraenkeId} after ${req.body.startTime}.`
-                });
+                res.send(data);
             }
-        })
+        });
     }
 };
 
 exports.allBuysOfUser = (req, res) => {
     const id = req.params.id;
 
-    Kauf.getAllByUser(id)
-    .then(data => {
-        res.send(data);
-    })
-    .catch(err => {
-        if(err.kind === 'not_found') {
-            res.status(404).send({
-                message: `Cannot find Kauf with userId=${userid}.`
-            });
+    Kauf.getAllByUser(id, (err, data) => {
+        if(err) {
+            if(err.kind === 'not_found') {
+                res.status(404).send({
+                    message: `Cannot find Kauf with userId=${userid}.`
+                });
+            }
+            else {
+                res.status(500).send({
+                    message: `Error retrieving Kauf userId=${userid}.`
+                });
+            }
         }
         else {
-            res.status(500).send({
-                message: `Error retrieving Kauf userId=${userid}.`
-            });
+            res.send(data);
         }
     })
 };
