@@ -15,8 +15,8 @@ User.create = (newUser, result) => {
   sql.then(connection => {
     connection.query(`INSERT INTO Nutzer (vorname, nachname, isFAHO, zimmerNr, splitwise, email) VALUES ("${newUser.vorname}","${newUser.nachname}",${newUser.isFaho},${newUser.zimmerNr},${newUser.splitwise},"${newUser.email}")`)
     .then(rows => {
-      console.log("created User: ", rows.toObject);
-      result(null, rows.toObject);
+      console.log("created User: ", toObject(rows));
+      result(null, toObject(rows));
     })
     .catch(err => {
       console.log("error: ", err);
@@ -31,8 +31,8 @@ User.findById = (id, result) => {
     connection.query(`SELECT * FROM Nutzer WHERE id = ${id}`)
     .then(rows => {
       if (rows.length) {
-        console.log("found user: ", rows[0].toObject);
-        result(null, rows[0].toObject);
+        console.log("found user: ", toObject(rows[0]));
+        result(null, toObject(rows[0]));
         return;
       }
       console.log("not found");
@@ -49,7 +49,7 @@ User.getAll = (result) => {
   sql.then(connection => {
     connection.query("SELECT * FROM Nutzer")
     .then(rows => {
-      result(null, rows.toObject);
+      result(null, toObject(rows));
     })
     .catch(err => {
       result(null, err);
@@ -67,7 +67,7 @@ User.remove = (id, result) => {
         return;
       }
       console.log("deleted user with id: ", id);
-      result(null, rows.toObject);
+      result(null, toObject(rows));
     })
     .catch(err => {
       console.log("error: ", err);
@@ -81,7 +81,7 @@ User.removeAll = result => {
     connection.query("DELETE FROM Nutzer")
     .then(rows => {
       console.log(`deleted ${rows.length} users`);
-      result(null, rows.toObject);
+      result(null, toObject(rows));
     })
     .catch(err => {
       console.log("error: ", err);
@@ -90,9 +90,9 @@ User.removeAll = result => {
   });
 };
 
-
-User.toObject = result => {
-  return JSON.parse(JSON.stringify(this, (key, value) =>
+toObject = (elem) => {
+  console.log(elem);
+  return JSON.parse(JSON.stringify(elem, (_key, value) =>
       typeof value === 'bigint' ? value.toString() : value // return everything else unchanged
   ));
 };

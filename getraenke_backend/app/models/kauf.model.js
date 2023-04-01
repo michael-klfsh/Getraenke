@@ -10,7 +10,7 @@ Kauf.create = (newKauf, result) => {
     sql.then(connection => {
         connection.query(`INSERT INTO UserKauftGetraenk (getraenkeId, userId, anzahl) VALUES ("${newKauf.getraenkeId}","${newKauf.userId}","${newKauf.anzahl}")`)
         .then(rows => {
-            result(null, rows.toObject);
+            result(null, toObject(rows));
         })
         .catch(err => {
             result(err, null);
@@ -24,7 +24,7 @@ Kauf.getUserDrinkAfterTimestamp = (userId, getraenkId, timestamp, result) => {
         connection.query(`SELECT * FROM UserKauftGetraenk WHERE userId = ${userId} AND getraenkeId = ${getraenkeId} AND timestamp >= ${timestamp}`)
         .then(rows => {
             if(rows.length) {
-                result(null, rows[0].toObject);
+                result(null, toObject(rows[0]));
             }
             result({kind: "not_found"}, null);
         })
@@ -39,7 +39,7 @@ Kauf.getAllByUser = (userId, result) => {
     sql.then(connection => {
         connection.query(`SELECT * FROM UserKauftGetraenk WHERE userId = ${userId}`)
         .then(rows => {
-            result(null, res.toObject);
+            result(null, toObject(rows));
         })
         .catch(err => {
             result(err, null);
@@ -52,7 +52,7 @@ Kauf.getFromUserAfterTimestamp = (userId, timestamp, result) => {
     sql.then(connection => {
         connection.query(`SELECT * FROM UserKauftGetraenk WHERE userId = ${userId} AND timestamp >= ${timestamp}`)
         .then(rows => {
-            result(null, rows.toObject);
+            result(null, toObject(rows));
         })
         .catch(err => {
             result(err, null);
@@ -65,7 +65,7 @@ Kauf.getAllAfterTimestamp = (timestamp, result) => {
     sql.then(connection => {
         connection.query(`SELECT * FROM UserKauftGetraenk WHERE timestamp >= ${timestamp}`)
         .then(rows => {
-            result(null, rows.toObject);
+            result(null, toObject(rows));
         })
         .catch(err => {
             result(err, null);
@@ -74,8 +74,8 @@ Kauf.getAllAfterTimestamp = (timestamp, result) => {
     });
 };
 
-Kauf.toObject = result => {
-    return JSON.parse(JSON.stringify(this, (key, value) => 
+toObject = (elem) => {
+    return JSON.parse(JSON.stringify(elem, (_key, value) => 
         typeof value === 'bigint' ? value.toString() : value
     ));
 };
