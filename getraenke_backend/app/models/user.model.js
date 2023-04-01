@@ -1,4 +1,3 @@
-const connection = require("./db.js");
 const sql = require("./db.js");
 
 
@@ -14,10 +13,10 @@ const User = function(user) {
   
 User.create = (newUser, result) => {
   sql.then(connection => {
-    connection.query("INSERT INTO Nutzer SET ?", newUser)
+    connection.query(`INSERT INTO Nutzer (vorname, nachname, isFAHO, zimmerNr, splitwise, email) VALUES ("${newUser.vorname}","${newUser.nachname}",${newUser.isFaho},${newUser.zimmerNr},${newUser.splitwise},"${newUser.email}")`)
     .then(rows => {
-      console.log("created User: ", { id: rows.insertId, ...newUser });
-      result(null, { id: rows.insertId, ...newUser });
+      console.log("created User: ", rows.toObject);
+      result(null, rows.toObject);
     })
     .catch(err => {
       console.log("error: ", err);
@@ -32,8 +31,8 @@ User.findById = (id, result) => {
     connection.query(`SELECT * FROM Nutzer WHERE id = ${id}`)
     .then(rows => {
       if (rows.length) {
-        console.log("found user: ", rows[0]);
-        result(null, rows[0]);
+        console.log("found user: ", rows[0].toObject);
+        result(null, rows[0].toObject);
         return;
       }
       console.log("not found");
@@ -50,7 +49,7 @@ User.getAll = (result) => {
   sql.then(connection => {
     connection.query("SELECT * FROM Nutzer")
     .then(rows => {
-      result(null, rows);
+      result(null, rows.toObject);
     })
     .catch(err => {
       result(null, err);
@@ -68,7 +67,7 @@ User.remove = (id, result) => {
         return;
       }
       console.log("deleted user with id: ", id);
-      result(null, rows);
+      result(null, rows.toObject);
     })
     .catch(err => {
       console.log("error: ", err);
@@ -82,13 +81,20 @@ User.removeAll = result => {
     connection.query("DELETE FROM Nutzer")
     .then(rows => {
       console.log(`deleted ${rows.length} users`);
-      result(null, rows);
+      result(null, rows.toObject);
     })
     .catch(err => {
       console.log("error: ", err);
       result(null, err);
     });
   });
+};
+
+
+User.toObject = result => {
+  return JSON.parse(JSON.stringify(this, (key, value) =>
+      typeof value === 'bigint' ? value.toString() : value // return everything else unchanged
+  ));
 };
   
 module.exports = User;

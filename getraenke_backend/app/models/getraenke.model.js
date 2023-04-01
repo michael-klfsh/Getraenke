@@ -6,72 +6,79 @@ const Getraenk = function(getraenk) {
 };
 
 Getraenk.create = (newGetraenk, result) => {
-    sql.query("INSERT INTO Getraenke SET ?", newGetraenk, (err, res) => {
-        if(err) {
-            result(err, null);
-            return;
-        }
-
-        result(null, { id: res.insertId, ...newGetraenk });
-    });
+  sql.then(connection => {
+    connection.query(`INSERT INTO Getraenke (name, preis) VALUES ("${newGetraenk.name}","${newGetraenk.preis}")`)
+    .then(rows => {
+      result(null, rows.toObject);
+    })
+    .catch(err => {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    })
+  });
 };
 
 Getraenk.findById = (id, result) => {
-    sql.query(`SELECT * FROM Getraenke WHERE id = ${id}`, (err, res) => {
-      if (err) {
-        result(err, null);
+  sql.then(connection => {
+    connection.query(`SELECT * FROM Getraenke WHERE id = ${id}`)
+    .then(rows => {
+      if(rows.length) {
+        result(null, rows[0].toObject);
         return;
       }
-  
-      if (res.length) {
-        result(null, res[0]);
-        return;
-      }
-  
-      // not found User with the id
       result({ kind: "not_found" }, null);
+    })
+    .catch(err => {
+      result(err, null);
     });
+  });
 };
 
-Getraenk.getAll = (result) => {
-    let query = "SELECT * FROM Getraenke";
-  
-    sql.query(query, (err, res) => {
-      if (err) {
-        result(null, err);
-        return;
-      }
-
-      result(null, res);
+Getraenk.getAll = (result) => {  
+  sql.then(connection => {
+    connection.query("SELECT * FROM Getraenke")
+    .then(rows => {
+      result(null, rows.toObject);
+    })
+    .catch(err => {
+      result(null, err);
     });
+  });
 };
 
 Getraenk.remove = (id, result) => {
-    sql.query("DELETE FROM Getraenke WHERE id = ?", id, (err, res) => {
-      if (err) {
-        result(null, err);
-        return;
-      }
-  
-      if (res.affectedRows == 0) {
-        // not found User with the id
+  sql.then(connection => {
+    connection.query(`DELETE FROM Getraenke WHERE id = ${id}`)
+    .then(rows => {
+      if(rows.length === 0) {
         result({ kind: "not_found" }, null);
         return;
       }
-
-      result(null, res);
+      result(null, rows.toObject);
+    })
+    .catch(err => {
+      result(null, err);
     });
+  });
 };
   
   Getraenk.removeAll = result => {
-    sql.query("DELETE FROM Getraenke", (err, res) => {
-      if (err) {
-        result(null, err);
-        return;
-      }
-
-      result(null, res);
+  sql.then(connection => {
+    connection.query("DELETE FROM Getraenke")
+    .then(rows => {
+      result(null, rows.toObject);
+    })
+    .catch(err => {
+      result(null, err);
     });
+  });
+};
+
+Getraenk.toObject = result => {
+  return JSON.parse(JSON.stringify(this, (key, value) =>
+    typeof value === 'bigint' ? value.toString() : value
+  ));
 };
   
 module.exports = Getraenk;

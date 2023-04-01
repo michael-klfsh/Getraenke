@@ -6,63 +6,78 @@ const Kauf = function(kauf) {
     this.anzahl = kauf.anzahl;
 };
 
-
-
 Kauf.create = (newKauf, result) => {
-    sql.query("INSERT INTO UserKauftGetraenk SET ?", newKauf, (err, res) => {
-        if(err) {
+    sql.then(connection => {
+        connection.query(`INSERT INTO UserKauftGetraenk (getraenkeId, userId, anzahl) VALUES ("${newKauf.getraenkeId}","${newKauf.userId}","${newKauf.anzahl}")`)
+        .then(rows => {
+            result(null, rows.toObject);
+        })
+        .catch(err => {
             result(err, null);
             return;
-        }
-        result(null, {timestamp: res.timestamp, ...newKauf});
+        })
     });
-}
+};
 
 Kauf.getUserDrinkAfterTimestamp = (userId, getraenkId, timestamp, result) => {
-    sql.query(`SELECT * FROM UserKauftGetraenk WHERE userId = ${userId} AND getraenkId = ${getraenkId} AND timestamp >= ${timestamp}`, (err, res) => {
-        if(err) {
+    sql.then(connection => {
+        connection.query(`SELECT * FROM UserKauftGetraenk WHERE userId = ${userId} AND getraenkeId = ${getraenkeId} AND timestamp >= ${timestamp}`)
+        .then(rows => {
+            if(rows.length) {
+                result(null, rows[0].toObject);
+            }
+            result({kind: "not_found"}, null);
+        })
+        .catch(err => {
             result(err, null);
             return;
-        }
-
-        if(res.length) {
-            result(null, res[0]);
-            return;
-        }
-
-        result({kind: "not_found"}, null);
+        })
     });
 };
 
 Kauf.getAllByUser = (userId, result) => {
-    sql.query(`SELECT * FROM UserKauftGetraenk WHERE userId = ${userId}`, (err, res) => {
-        if(err) {
-            result(null, err);
+    sql.then(connection => {
+        connection.query(`SELECT * FROM UserKauftGetraenk WHERE userId = ${userId}`)
+        .then(rows => {
+            result(null, res.toObject);
+        })
+        .catch(err => {
+            result(err, null);
             return;
-        }
-
-        result(null, res);
+        })
     });
 };
 
 Kauf.getFromUserAfterTimestamp = (userId, timestamp, result) => {
-    sql.query(`SELECT * FROM UserKauftGetraenk WHERE userID = ${userId} AND timestamp >= ${timestamp}`, (err, res) => {
-        if(err) {
-            result(null, err);
+    sql.then(connection => {
+        connection.query(`SELECT * FROM UserKauftGetraenk WHERE userId = ${userId} AND timestamp >= ${timestamp}`)
+        .then(rows => {
+            result(null, rows.toObject);
+        })
+        .catch(err => {
+            result(err, null);
             return;
-        }
-
-        result(null, res);
+        })
     });
 };
 
 Kauf.getAllAfterTimestamp = (timestamp, result) => {
-    sql.query(`SELECT * FROM UserKauftGetraenk WHERE timestamp >= ${timestamp}`, (err, res) => {
-        if(err) {
-            result(null, err);
+    sql.then(connection => {
+        connection.query(`SELECT * FROM UserKauftGetraenk WHERE timestamp >= ${timestamp}`)
+        .then(rows => {
+            result(null, rows.toObject);
+        })
+        .catch(err => {
+            result(err, null);
             return;
-        }
-
-        result(null, res);
+        })
     });
 };
+
+Kauf.toObject = result => {
+    return JSON.parse(JSON.stringify(this, (key, value) => 
+        typeof value === 'bigint' ? value.toString() : value
+    ));
+};
+
+module.export = Kauf;
