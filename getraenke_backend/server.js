@@ -17,10 +17,6 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const db = require("./app/models");
-//force: resync databse (drop existing tables)
-db.sequelize.sync({ force:true });
-
 app.get("/", (req, res) => {
     res.json({ message: "Welcome to the application." });
 });
@@ -32,4 +28,4 @@ require("./app/routes/getraenke.routes")(app);
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
-  });
+});
