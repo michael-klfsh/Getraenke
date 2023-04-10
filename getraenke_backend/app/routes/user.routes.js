@@ -13,9 +13,9 @@ module.exports = app => {
 
     router.get("/:id/getraenk", user.allBuysOfUser);
 
-    router.get("/:id/from/:start-time", user.findBuy);
+    router.get("/:id/from/:start", user.findBuy);
 
-    router.get("/:id/getraenk/:getraenk-id/from/:start-time", user.findBuy);
+    router.get("/:id/getraenk/:getraenkid/from/:start", user.findBuy);
 
 
     app.use('/api/user', router);
