@@ -1,14 +1,14 @@
 const sql = require("./db.js");
 
 const Kauf = function(kauf) {
-    this.getraenkeId = kauf.getraenkeId;
-    this.userId = kauf.userId;
+    this.getraenkId = kauf.getraenkId;
+    this.nutzerId = kauf.nutzerId;
     this.anzahl = kauf.anzahl;
 };
 
 Kauf.create = (newKauf, result) => {
     sql.then(connection => {
-        connection.query(`INSERT INTO UserKauftGetraenk (getraenkeId, userId, anzahl) VALUES ("${newKauf.getraenkeId}","${newKauf.userId}","${newKauf.anzahl}")`)
+        connection.query(`INSERT INTO NutzerKauftGetraenk (getraenkId, nutzerId, anzahl) VALUES ("${newKauf.getraenkId}","${newKauf.nutzerId}","${newKauf.anzahl}")`)
         .then(rows => {
             result(null, toObject(rows));
         })
@@ -21,7 +21,7 @@ Kauf.create = (newKauf, result) => {
 
 Kauf.getUserDrinkAfterTimestamp = (userId, getraenkId, timestamp, result) => {
     sql.then(connection => {
-        connection.query(`SELECT * FROM UserKauftGetraenk WHERE userId = ${userId} AND getraenkeId = ${getraenkeId} AND timestamp >= ${timestamp}`)
+        connection.query(`SELECT * FROM NutzerKauftGetraenk WHERE nutzerId = ${userId} AND getraenkId = ${getraenkId} AND zeit >= ${timestamp}`)
         .then(rows => {
             if(rows.length) {
                 result(null, toObject(rows[0]));
@@ -37,7 +37,7 @@ Kauf.getUserDrinkAfterTimestamp = (userId, getraenkId, timestamp, result) => {
 
 Kauf.getAllByUser = (userId, result) => {
     sql.then(connection => {
-        connection.query(`SELECT * FROM UserKauftGetraenk WHERE userId = ${userId}`)
+        connection.query(`SELECT * FROM NutzerKauftGetraenk WHERE nutzerId = ${userId}`)
         .then(rows => {
             result(null, toObject(rows));
         })
@@ -50,7 +50,7 @@ Kauf.getAllByUser = (userId, result) => {
 
 Kauf.getFromUserAfterTimestamp = (userId, timestamp, result) => {
     sql.then(connection => {
-        connection.query(`SELECT * FROM UserKauftGetraenk WHERE userId = ${userId} AND timestamp >= ${timestamp}`)
+        connection.query(`SELECT * FROM NutzerKauftGetraenk WHERE nutzerId = ${userId} AND zeit >= ${timestamp}`)
         .then(rows => {
             result(null, toObject(rows));
         })
@@ -63,7 +63,7 @@ Kauf.getFromUserAfterTimestamp = (userId, timestamp, result) => {
 
 Kauf.getAllAfterTimestamp = (timestamp, result) => {
     sql.then(connection => {
-        connection.query(`SELECT * FROM UserKauftGetraenk WHERE timestamp >= ${timestamp}`)
+        connection.query(`SELECT * FROM NutzerKauftGetraenk WHERE timestamp >= ${timestamp}`)
         .then(rows => {
             result(null, toObject(rows));
         })
@@ -80,4 +80,4 @@ toObject = (elem) => {
     ));
 };
 
-module.export = Kauf;
+module.exports = Kauf;

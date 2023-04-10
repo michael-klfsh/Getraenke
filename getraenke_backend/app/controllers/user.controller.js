@@ -87,8 +87,8 @@ exports.addBuy = (req, res) => {
     }
 
     const kauf = {
-        getraenkeId: req.body.getraenkeId,
-        userId: req.params.id,
+        getraenkId: req.body.getraenkeId,
+        nutzerId: req.params.id,
         anzahl: req.body.anzahl
     };
 
