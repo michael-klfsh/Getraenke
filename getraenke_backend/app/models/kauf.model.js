@@ -25,6 +25,7 @@ Kauf.getUserDrinkAfterTimestamp = (userId, getraenkId, date, result) => {
         .then(rows => {
             if(rows.length) {
                 result(null, toObject(rows[0]));
+                return;
             }
             result({kind: "not_found"}, null);
         })
