@@ -19,9 +19,9 @@ Kauf.create = (newKauf, result) => {
     });
 };
 
-Kauf.getUserDrinkAfterTimestamp = (userId, getraenkId, timestamp, result) => {
+Kauf.getUserDrinkAfterTimestamp = (userId, getraenkId, date, result) => {
     sql.then(connection => {
-        connection.query(`SELECT * FROM NutzerKauftGetraenk WHERE nutzerId = ${userId} AND getraenkId = ${getraenkId} AND zeit >= ${timestamp}`)
+        connection.query(`SELECT * FROM NutzerKauftGetraenk WHERE nutzerId = ${userId} AND getraenkId = ${getraenkId} AND DATE(zeit) >= '${date}'`)
         .then(rows => {
             if(rows.length) {
                 result(null, toObject(rows[0]));
@@ -48,9 +48,9 @@ Kauf.getAllByUser = (userId, result) => {
     });
 };
 
-Kauf.getFromUserAfterTimestamp = (userId, timestamp, result) => {
+Kauf.getFromUserAfterTimestamp = (userId, date, result) => {
     sql.then(connection => {
-        connection.query(`SELECT * FROM NutzerKauftGetraenk WHERE nutzerId = ${userId} AND zeit >= ${timestamp}`)
+        connection.query(`SELECT * FROM NutzerKauftGetraenk WHERE nutzerId = ${userId} AND DATE(zeit) >= '${date}'`)
         .then(rows => {
             result(null, toObject(rows));
         })
@@ -61,9 +61,9 @@ Kauf.getFromUserAfterTimestamp = (userId, timestamp, result) => {
     });
 };
 
-Kauf.getAllAfterTimestamp = (timestamp, result) => {
+Kauf.getAllAfterTimestamp = (date, result) => {
     sql.then(connection => {
-        connection.query(`SELECT * FROM NutzerKauftGetraenk WHERE timestamp >= ${timestamp}`)
+        connection.query(`SELECT * FROM NutzerKauftGetraenk WHERE DATE(zeit) >= '${date}'`)
         .then(rows => {
             result(null, toObject(rows));
         })
