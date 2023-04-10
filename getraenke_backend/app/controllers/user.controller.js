@@ -106,9 +106,9 @@ exports.addBuy = (req, res) => {
 
 exports.findBuy = (req, res) => {
     const id = req.params.id;
-    const getraenkeId = req.body.getraenkeId;
+    const getraenkeId = req.params.getraenkid;
 
-    if(!req.body.startTime) {
+    if(!req.params.start) {
         res.status(400).send({
             message: "Provide a starting time!"
         });
@@ -116,16 +116,16 @@ exports.findBuy = (req, res) => {
     }
 
     if(!getraenkeId) {
-        Kauf.getFromUserAfterTimestamp(id, req.body.startTime, (err, data) => {
+        Kauf.getFromUserAfterTimestamp(id, req.params.start, (err, data) => {
             if(err) {
                 if(err.kind === 'not_found') {
                     res.status(404).send({
-                        message: `Cannot find Kauf with userId=${userid} after ${req.body.startTime}.`
+                        message: `Cannot find Kauf with userId=${id} after ${req.params.start}.`
                     });
                 }
                 else {
                     res.status(500).send({
-                        message: `Error retrieving Kauf userId=${userid} after ${req.body.startTime}.`
+                        message: `Error retrieving Kauf userId=${id} after ${req.params.start}.`
                     });
                 }
             }
@@ -135,16 +135,16 @@ exports.findBuy = (req, res) => {
         })
     }
     else {
-        Kauf.getUserDrinkAfterTimestamp(id, getraenkeId, req.body.startTime, (err, data) => {
+        Kauf.getUserDrinkAfterTimestamp(id, getraenkeId, req.params.start, (err, data) => {
             if(err) {
                 if(err.kind === 'not_found') {
                     res.status(404).send({
-                        message: `Cannot find Kauf with userId=${userid}, getraenkeId=${getraenkeId} after ${req.body.startTime}.`
+                        message: `Cannot find Kauf with userId=${id}, getraenkeId=${getraenkeId} after ${req.params.start}.`
                     });
                 }
                 else {
                     res.status(500).send({
-                        message: `Error retrieving Kauf userId=${userid}, getraenkeId=${getraenkeId} after ${req.body.startTime}.`
+                        message: `Error retrieving Kauf userId=${id}, getraenkeId=${getraenkeId} after ${req.params.start}.`
                     });
                 }
             }
@@ -162,12 +162,12 @@ exports.allBuysOfUser = (req, res) => {
         if(err) {
             if(err.kind === 'not_found') {
                 res.status(404).send({
-                    message: `Cannot find Kauf with userId=${userid}.`
+                    message: `Cannot find Kauf with userId=${id}.`
                 });
             }
             else {
                 res.status(500).send({
-                    message: `Error retrieving Kauf userId=${userid}.`
+                    message: `Error retrieving Kauf userId=${id}.`
                 });
             }
         }
