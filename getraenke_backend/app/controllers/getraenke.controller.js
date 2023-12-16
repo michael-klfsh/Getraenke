@@ -4,25 +4,24 @@ const ObjectId = require("mongodb").ObjectId;
 
 
 exports.create = (req, res) => {
+    console.log(req.body)
     if(!req.body.name || !req.body.preis) {
-        res.status(400).send({
-            message: "Need to pass a name and a price!"
-        });
+        res.json(400, "Need to pass a name and a price!");
         return;
     }
     const getraenk = {
         name: req.body.name,
         preis: req.body.preis
     };
-
-    Getraenk.create(getraenk, (err, data) => {
-        if(err) {
-            res.status(500).send({
-                message: err.message || "Some error occurred while creating the drink."
-            });
+    connection().then(async (db) => {
+        const collection = db.collection("drink");
+        try {
+            result = await collection.insertOne({name: getraenk.name, price: getraenk.price});
+            res.json(result);
         }
-        else {
-            res.send(data);
+        catch(e) {
+            console.log(e);
+            res.json(500);
         }
     });
 };
@@ -62,23 +61,15 @@ exports.findAll = async (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    Getraenk.remove(id, (err, date) => {
-        if(err) {
-            if(err.kind === 'not_found') {
-                res.status(404).send({
-                    message: `Not found User with id ${id}.`
-                });
-            }
-            else {
-                res.status(500).send({
-                    message: `Could not delete User with id=${id}`
-                });
-            }
+    connection().then(async (db) => {
+        const collection = db.collection("drink");
+        try {
+            let result = await collection.deleteOne({_id: new ObjectId(id)});
+            res.json(result);
         }
-        else {
-            res.send({
-                message: "User was deleted successfully!"
-            });
+        catch(e) {
+            console.log(e);
+            res.json(500);
         }
     });
 };
