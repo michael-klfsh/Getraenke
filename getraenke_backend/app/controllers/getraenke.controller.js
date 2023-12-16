@@ -1,4 +1,7 @@
 const Getraenk = require("../models/getraenke.model.js");
+const connection = require("../db.js");
+const ObjectId = require("mongodb").ObjectId;
+
 
 exports.create = (req, res) => {
     if(!req.body.name || !req.body.preis) {
@@ -26,25 +29,35 @@ exports.create = (req, res) => {
 
 exports.findOne = (req, res) => {
     const id = req.params.id;
+    console.log(id);
 
-    Getraenk.findById(id, (err, data) => {
-        if(err) {
-            if(err.kind === 'not_found') {
-                res.status(404).send({
-                    message: `Cannot find Getraenk with id=${id}.`
-                });
-            }
-            else {
-                res.status(500).send({
-                    message: `Error retrieving Getraenk with id=${id}.`
-                });
-            }
+    connection().then(async (db) => {
+        const collection = db.collection("drink");
+        let result = await collection.find({_id: new ObjectId(id)}).toArray();
+        console.log(result);
+        if(result.length != 1) {
+            res.json(401, `Cannot find Getraenk with id=${id}.`)
+            return
         }
-        else {
-            res.send(data);
-        }
+        res.json(result);
     });
 };
+
+exports.findAll = async (req, res) => { 
+    connection().then(async (db) => {
+        const collection = db.collection("drink");
+        let results = await collection
+          .find({})
+          .limit(50)
+          .toArray();
+        if (results.length == 0) {
+          res.json(401, "No drinks found!");
+          return;
+        }
+        res.json(results);
+        return;
+      });    
+}
 
 exports.delete = (req, res) => {
     const id = req.params.id;
