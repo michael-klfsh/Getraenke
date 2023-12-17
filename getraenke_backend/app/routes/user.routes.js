@@ -9,14 +9,5 @@ module.exports = app => {
 
     router.delete("/:id", user.delete);
 
-    router.post("/:id/getraenk", user.addBuy);
-
-    router.get("/:id/getraenk", user.allBuysOfUser);
-
-    router.get("/:id/from/:start", user.findBuy);
-
-    router.get("/:id/getraenk/:getraenkid/from/:start", user.findBuy);
-
-
     app.use('/api/user', router);
 };

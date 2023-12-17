@@ -23,6 +23,7 @@ app.get("/", (req, res) => {
 
 require("./app/routes/user.routes")(app);
 require("./app/routes/getraenke.routes")(app);
+require("./app/routes/buy.routes")(app);
 
 //Setzt Port auf 8080 (falls keine Umgebungsvariable PORT existiert)
 const PORT = process.env.PORT || 8080;

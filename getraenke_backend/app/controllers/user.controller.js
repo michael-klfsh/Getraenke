@@ -1,8 +1,14 @@
 const User = require("../models/user.model.js");
 const Kauf = require("../models/kauf.model.js");
 
+const connection = require("../db.js");
+const { ObjectId } = require("mongodb");
+
 exports.create = (req, res) => {
-    if(!req.body.vorname) {     //TODO Check more params
+    if(!req.body.vorname || !req.body.nachname || 
+       !req.body.isFAHO || !req.body.splitwise || 
+       !req.body.email) {
+
         res.status(400).send({
             message: "Content can not be empty!"
         });
@@ -17,162 +23,60 @@ exports.create = (req, res) => {
         email: req.body.email,
     };
 
-    User.create(user, (err, data) => {
-        if (err) {
-          res.status(500).send({
-            message:
-              err.message || "Some error occurred while creating the Tutorial."
-          });
+    connection().then(async (db) => {
+        const collection = db.collection("user");
+        try {
+            result = await collection.insertOne({
+                name: user.vorname, 
+                lastname: user.nachname,
+                isFaho: user.isFaho,
+                zimmerNr: user.zimmerNr,
+                splitwise: user.splitwise,
+                email: user.email
+            });
+            res.json(result);
         }
-        else {
-            res.send(data);
+        catch(e) {
+            console.log(e);
+            res.json(500);
         }
-      });
+    });
 };
 
 exports.findOne = (req, res) => {
     const id = req.params.id;
 
-    User.findById(id, (err, data) => {
-        if(err) {
-            if(err.kind === 'not_found') {
-                res.status(404).send({
-                    message: `Cannot find User with id=${id}.`
-                });
+    connection().then(async (db) => {
+        const collection = db.collection("user");
+        try {
+            result = await collection.find({
+                _id: new ObjectId(id)
+            });
+            if(result.length != 1) {
+                res.json(401, `Cannot find Getraenk with id=${id}.`)
+                return
             }
-            else {
-                res.status(500).send({
-                    message: `Error retrieving User with id=${id}.`
-                });
-            }
+            res.json(result);
         }
-        else {
-            res.send(data);
+        catch(e) {
+            console.log(e);
+            res.json(500);
         }
-    });
+    })
 };
 
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    User.remove(id, (err, data) => {
-        if(err) {
-            if(err.kind === 'not_found') {
-                res.status(404).send({
-                    message: `Not found User with id ${id}.`
-                });
-            }
-            else {
-                res.status(500).send({
-                    message: `Could not delete User with id=${id}`
-                });
-            }
+    connection().then(async (db) => {
+        const collection = db.collection("user");
+        try {
+            let result = await collection.deleteOne({_id: new ObjectId(id)});
+            res.json(result);
         }
-        else {
-            res.send({
-                message: "User was deleted successfully!"
-            });
+        catch(e) {
+            console.log(e);
+            res.json(500);
         }
     });
-};
-
-exports.addBuy = (req, res) => {
-    const id = req.params.id;
-
-    if(!req.body.getraenkeId || !req.body.anzahl) {
-        res.status(400).send({
-            message: "Content can not be empty!"
-        });
-        return;
-    }
-
-    const kauf = {
-        getraenkId: req.body.getraenkeId,
-        nutzerId: req.params.id,
-        anzahl: req.body.anzahl
-    };
-
-    Kauf.create(kauf, (err, data) => {
-        if(err) {
-            res.status(500).send({
-                message: err.message || "Some error occured while creating the buy."
-            });
-        }
-        else {
-            res.send(data);
-        }
-    });
-};
-
-exports.findBuy = (req, res) => {
-    const id = req.params.id;
-    const getraenkeId = req.params.getraenkid;
-
-    if(!req.params.start) {
-        res.status(400).send({
-            message: "Provide a starting time!"
-        });
-        return;
-    }
-
-    if(!getraenkeId) {
-        Kauf.getFromUserAfterTimestamp(id, req.params.start, (err, data) => {
-            if(err) {
-                if(err.kind === 'not_found') {
-                    res.status(404).send({
-                        message: `Cannot find Kauf with userId=${id} after ${req.params.start}.`
-                    });
-                }
-                else {
-                    res.status(500).send({
-                        message: `Error retrieving Kauf userId=${id} after ${req.params.start}.`
-                    });
-                }
-            }
-            else {
-                res.send(data);
-            }
-        })
-    }
-    else {
-        Kauf.getUserDrinkAfterTimestamp(id, getraenkeId, req.params.start, (err, data) => {
-            if(err) {
-                if(err.kind === 'not_found') {
-                    res.status(404).send({
-                        message: `Cannot find Kauf with userId=${id}, getraenkeId=${getraenkeId} after ${req.params.start}.`
-                    });
-                }
-                else {
-                    res.status(500).send({
-                        message: `Error retrieving Kauf userId=${id}, getraenkeId=${getraenkeId} after ${req.params.start}.`
-                    });
-                }
-            }
-            else {
-                res.send(data);
-            }
-        });
-    }
-};
-
-exports.allBuysOfUser = (req, res) => {
-    const id = req.params.id;
-
-    Kauf.getAllByUser(id, (err, data) => {
-        if(err) {
-            if(err.kind === 'not_found') {
-                res.status(404).send({
-                    message: `Cannot find Kauf with userId=${id}.`
-                });
-            }
-            else {
-                res.status(500).send({
-                    message: `Error retrieving Kauf userId=${id}.`
-                });
-            }
-        }
-        else {
-            res.send(data);
-        }
-    })
 };
