@@ -65,6 +65,20 @@ exports.findOne = (req, res) => {
     })
 };
 
+exports.findAll = (req, res) => {
+    connection().then(async(db) => {
+        const collection = db.collection("user");
+        try {
+            results = await collection.find({}).toArray();
+            res.json(results);
+        }
+        catch(e){
+            console.log(e);
+            res.json(500);
+        }
+    });
+};
+
 exports.delete = (req, res) => {
     const id = req.params.id;
 
