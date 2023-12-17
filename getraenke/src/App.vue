@@ -4,8 +4,8 @@
     </h2>
     <div class="card-collection">
       <card-component 
-      v-for="user in users" :vorname="user.vorname" :nachname="user.nachname" :id="user.id" :key="user.id" 
-      v-bind:card-id="user.id" v-bind:user-name="user.vorname" data-bs-toggle="modal" data-bs-target="#userModal"
+      v-for="user in users" :vorname="user.name" :nachname="user.lastname" :id="user._id" :key="user._id" 
+      v-bind:card-id="user._id" v-bind:user-name="user.name" data-bs-toggle="modal" data-bs-target="#userModal"
       @click="reset"
     />
     </div>
@@ -29,15 +29,20 @@ export default {
 
   data() {
     return {
-      users: [
-        {id: 1, vorname: "Michael", nachname: "Kleefisch"},
-        {id: 2, vorname: "Tim", nachname: "Kleefisch"},
-        {id: 3, vorname: "Stefan", nachname: "Kleefisch"},
-        {id: 4, vorname: "Sophie", nachname: "Kasper"},
-      ],
+      users: [],
       resetData: false,
       userinfos: {id: "", name: ""}
     }
+  },
+
+  created() {
+    fetch(`http://localhost:8080/api/user`)
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        this.users = json;
+      })
+      .catch((error) => console.error(error));
   },
 
   methods: {
