@@ -60,14 +60,23 @@
             },
 
             register() {
-                let vorname = document.getElementById('firstName').value
-                let nachname = document.getElementById('lastName').value
-                let email = document.getElementById('email').value
-                let isFaho = document.getElementById('isFaho').checked
-                let roomNr = document.getElementById('roomNo').value
-                let hasSplitwise = document.getElementById('hasSplitwise').checked
-                
-                console.log('Nutzer: ' + vorname + ', ' + nachname + '(' + email + ', ' + isFaho + ', ' + roomNr + ', ' + hasSplitwise + ')')
+                let data = {
+                vorname: document.getElementById('firstName').value,
+                nachname: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                isFAHO: document.getElementById('isFaho').checked,
+                zimmerNr: document.getElementById('roomNo').value,
+                splitwise: document.getElementById('hasSplitwise').checked,
+                }
+                console.log(data);
+
+                fetch("http://localhost:8080/api/user", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(data)
+                }).then(res => {
+                    console.log(res.status);
+                });
             }
         }
     }

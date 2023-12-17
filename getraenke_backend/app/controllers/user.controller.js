@@ -6,7 +6,7 @@ const { ObjectId } = require("mongodb");
 
 exports.create = (req, res) => {
     if(!req.body.vorname || !req.body.nachname || 
-       !req.body.isFAHO || !req.body.splitwise || 
+       !("isFAHO" in req.body) || !("splitwise" in req.body) || 
        !req.body.email) {
 
         res.status(400).send({
