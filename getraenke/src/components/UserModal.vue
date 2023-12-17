@@ -8,14 +8,9 @@
             </div>
             <div class="modal-body">
                 <div id="drink-form">
-                    <buy-drink v-for="drink in drinks" :key="drink.id"
-                        :name="drink.name" :price="drink.preis" :reset="reset" @resetted="sendResetted"/>
+                    <buy-drink v-for="drink in drinks" :key="drink._id"
+                        :name="drink.name" :price="drink.price" :id="drink._id" :reset="reset" @resetted="sendResetted"/>
                 </div>
-                <!--<div>
-                    <p>Spezi: Anzahl 8 Gesamt: 6,40€</p>
-                    <p>Bier: Anzahl 10 Gesamt: 7,00€</p>
-                    <p>Insgesamt: 13,40€</p>
-                </div>-->
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
@@ -41,11 +36,18 @@
 
         data() {
             return {
-                drinks: [
-                    {id: 1, name: 'Spezi', preis: 0.8},
-                    {id: 2, name: 'Bier', preis: 0.7}
-                ]
+                drinks: []
             }
+        },
+
+        created() {
+            fetch(`http://localhost:8080/api/getraenke`)
+                .then((response) => response.json())
+                .then((json) => {
+                console.log(json);
+                this.drinks = json;
+                })
+                .catch((error) => console.error(error));
         },
 
         methods: {
@@ -59,9 +61,18 @@
                 let userId = this.data.id
                 console.log('UserId: ' + userId)
                 for(let i=0; i<drinks.length; i++) {
-                    let price = drinks[i].attributes['price'].value
-                    let amount = drinks[i].value
-                    console.log(amount + ' ' + price)
+                    let data = {
+                        getraenkeId: drinks[i].attributes['id'].value,
+                        anzahl: drinks[i].value
+                    }
+
+                    fetch(`http://localhost:8080/api/user/${userId}/getraenk`, {
+                        method: "POST",
+                        headers: {"Content-Type": "application/json"},
+                        body: JSON.stringify(data)
+                    }).then(res => {
+                        console.log(res.status);
+                    });
                 }
 
 
