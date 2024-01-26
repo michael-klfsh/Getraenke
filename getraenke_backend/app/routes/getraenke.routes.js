@@ -5,6 +5,8 @@ module.exports = app => {
 
     router.post("/", getraenke.create);
 
+    router.get("/", getraenke.findAll);
+
     router.get("/:id", getraenke.findOne);
 
     router.delete("/:id", getraenke.delete);

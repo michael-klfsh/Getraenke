@@ -12,10 +12,9 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
-
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
     res.json({ message: "Welcome to the application." });
@@ -23,6 +22,7 @@ app.get("/", (req, res) => {
 
 require("./app/routes/user.routes")(app);
 require("./app/routes/getraenke.routes")(app);
+require("./app/routes/buy.routes")(app);
 
 //Setzt Port auf 8080 (falls keine Umgebungsvariable PORT existiert)
 const PORT = process.env.PORT || 8080;
