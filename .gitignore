@@ -2,6 +2,7 @@
 node_modules
 /getraenke/dist
 .env
+/getraenke_backend/app/config
 
 
 # local env files
