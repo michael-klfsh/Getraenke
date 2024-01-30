@@ -8,7 +8,7 @@ const app = express();
 
 var corsOptions = {
     //Gebe nur Anfragen von dieser Origin durch
-    origin: ["https://michael-klfsh.github.io/Getraenke/", "http://89.1.140.139"]
+    origin: ["https://michael-klfsh.github.io/Getraenke/", "http://192.168.178.147:8080/"]
 };
 
 app.use(cors(corsOptions));
