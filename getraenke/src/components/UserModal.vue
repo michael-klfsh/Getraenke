@@ -41,7 +41,7 @@
         },
 
         created() {
-            fetch(`http://localhost:8080/api/getraenke`)
+            fetch(`${process.env.VUE_APP_BASE_URL}/getraenke`)
                 .then((response) => response.json())
                 .then((json) => {
                 console.log(json);
@@ -66,7 +66,7 @@
                         anzahl: drinks[i].value
                     }
 
-                    fetch(`http://localhost:8080/api/user/${userId}/getraenk`, {
+                    fetch(`${process.env.VUE_APP_BASE_URL}/user/${userId}/getraenk`, {
                         method: "POST",
                         headers: {"Content-Type": "application/json"},
                         body: JSON.stringify(data)

@@ -36,7 +36,7 @@ export default {
   },
 
   created() {
-    fetch(`http://localhost:8080/api/user`)
+    fetch(`${process.env.VUE_APP_BASE_URL}/user`)
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
