@@ -8,10 +8,10 @@ const app = express();
 
 var corsOptions = {
     //Gebe nur Anfragen von dieser Origin durch
-    origin: ["https://michael-klfsh.github.io/Getraenke/", "http://192.168.178.147:8080/"]
+    origin: ['*'],
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
