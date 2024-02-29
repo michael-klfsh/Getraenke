@@ -51,9 +51,9 @@ exports.findOne = (req, res) => {
         try {
             result = await collection.find({
                 _id: new ObjectId(id)
-            });
+            }).toArray();
             if(result.length != 1) {
-                res.json(401, `Cannot find Getraenk with id=${id}.`)
+                res.json(401, `Cannot find User with id=${id}.`)
                 return
             }
             res.json(result);
