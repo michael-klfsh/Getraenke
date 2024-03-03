@@ -6,6 +6,7 @@
       <card-component 
       v-for="user in users" :vorname="user.name" :nachname="user.lastname" :id="user._id" :key="user._id" 
       v-bind:card-id="user._id" v-bind:user-name="user.name" data-bs-toggle="modal" data-bs-target="#userModal"
+      class="user-card"
       @click="reset"
     />
     </div>
@@ -82,5 +83,13 @@ export default {
     justify-content: center;
     flex-direction: row;
     flex-wrap: wrap;
+  }
+
+  .user-card {
+    max-width: 260px;
+  }
+
+  .user-card .card-text {
+    text-align: center;
   }
 </style>
