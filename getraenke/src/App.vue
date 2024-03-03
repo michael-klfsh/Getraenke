@@ -76,6 +76,7 @@ export default {
     position: absolute;
     bottom: 10px;
     right: 20px;
+    padding-top: 0px;
   }
 
   .card-collection {
