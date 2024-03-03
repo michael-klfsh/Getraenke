@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <div id="drink-form">
                     <buy-drink v-for="drink in drinks" :key="drink._id"
-                        :name="drink.name" :price="drink.price" :id="drink._id" :reset="reset" @resetted="sendResetted"/>
+                        :name="drink.name" :price="drink.price" :id="drink._id" :amount="amount[drink._id]" :reset="reset" @resetted="sendResetted"/>
                 </div>
             </div>
             <div class="modal-footer">
@@ -36,18 +36,9 @@
 
         data() {
             return {
-                drinks: []
+                drinks: [],
+                amount: [],
             }
-        },
-
-        created() {
-            fetch(`${process.env.VUE_APP_BASE_URL}/getraenke`)
-                .then((response) => response.json())
-                .then((json) => {
-                console.log(json);
-                this.drinks = json;
-                })
-                .catch((error) => console.error(error));
         },
 
         methods: {
@@ -74,9 +65,32 @@
                         console.log(res.status);
                     });
                 }
+            },
 
+            fetchCurrentDrinks() {
+                fetch(`${process.env.VUE_APP_BASE_URL}/getraenke`)
+                    .then((response) => response.json())
+                    .then((json) => {
+                        console.log(json);
+                        this.drinks = json;
+                    })
+                    .catch((error) => console.error(error));
+            },
 
+            fetchBoughtDrinks() {
+                fetch(`${process.env.VUE_APP_BASE_URL}/user/${this.data.id}/getraenk`)
+                    .then((response) => response.json())
+                    .then((json) => {
+                        console.log(json);
+                        let group = Object.groupBy(json, ({ drinkId }) => drinkId);
+                        console.log(group);
+                        for(const [key, value] of Object.entries(group)) {
+                            this.amount[key] = value.reduce((n, {amount}) => n + parseInt(amount), 0);
+                        }
+                        console.log(this.amount);
+                })
             }
+
         }
     }
   </script>

@@ -9,7 +9,7 @@
       @click="reset"
     />
     </div>
-    <user-modal :data="userinfos" :reset="resetData" @resetted="resetted"/>
+    <user-modal :data="userinfos" :reset="resetData" @resetted="resetted" ref="userModal"/>
     <add-user-modal/>
     <button type="button" id="add-user" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">+</button>
 </template>
@@ -50,8 +50,11 @@ export default {
       this.resetData = true
       let parent = event.target.parentElement
 
-      this.userinfos.id = parent.getAttribute('card-id')
-      this.userinfos.name = parent.getAttribute('user-name')
+      this.userinfos.id = parent.getAttribute('card-id');
+      this.userinfos.name = parent.getAttribute('user-name');
+
+      this.$refs["userModal"].fetchCurrentDrinks();
+      this.$refs["userModal"].fetchBoughtDrinks();
     },
     resetted() {
       this.resetData = false

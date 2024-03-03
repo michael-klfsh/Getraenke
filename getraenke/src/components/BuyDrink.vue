@@ -1,6 +1,8 @@
 <template>
     <div class="mb-3 input-group">
-        <label v-bind:for="id">{{ name }} (Preis: {{ price }}): </label>
+        <label v-bind:for="id">{{ name }} (Preis: {{ price }}):<br>
+            <div class="sub-title">gekauft: {{ amount }}</div>
+        </label>
         <button id="down" class="btn btn-outline-secondary left" type="button" @click="decrement">-</button>
         <input type="number" :id="id" class="form-control" v-model="this.count" v-bind:price="price" readonly>
         <button id="up" class="btn btn-outline-secondary" type="button" @click="increment">+</button>
@@ -14,6 +16,7 @@
       name: String,
       price: Number,
       id: String,
+      amount: Number,
       reset: Boolean
     },
 
@@ -63,5 +66,10 @@
     .left {
         border-top-left-radius: 6px !important;
         border-bottom-left-radius: 6px !important;
+    }
+
+    .sub-title {
+        font-size: 10px;
+        padding-left: 5px;
     }
   </style>
