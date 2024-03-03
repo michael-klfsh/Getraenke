@@ -90,6 +90,10 @@ export default {
     max-width: 260px;
   }
 
+  .user-card:not(:last-child) {
+    margin-right: 2px;
+  }
+
   .user-card .card-text {
     text-align: center;
   }

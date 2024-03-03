@@ -44,17 +44,17 @@
 
     .profile-img-container {
       align-self: center;
-      width: 100px;
-      height: 100px;
-      border-radius: 100px;
+      width: 75px;
+      height: 75px;
+      border-radius: 75px;
       background: #333;
     }
     .profile-img {
       width: 100%;
       text-align: center;
       color: white;
-      font-size: 36px;
-      line-height: 100px;
+      font-size: 25px;
+      line-height: 75px;
     }
   </style>
   
