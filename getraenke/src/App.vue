@@ -7,10 +7,10 @@
       v-for="user in users" :vorname="user.name" :nachname="user.lastname" :id="user._id" :key="user._id" 
       v-bind:card-id="user._id" v-bind:user-name="user.name" data-bs-toggle="modal" data-bs-target="#userModal"
       class="user-card"
-      @click="reset"
+      @click="reset(user)"
     />
     </div>
-    <user-modal :data="userinfos" :reset="resetData" @resetted="resetted" ref="userModal"/>
+    <user-modal :username="username" :userid="userid" :reset="resetData" @resetted="resetted" ref="userModal"/>
     <add-user-modal/>
     <button type="button" id="add-user" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">+</button>
 </template>
@@ -32,7 +32,8 @@ export default {
     return {
       users: [],
       resetData: false,
-      userinfos: {id: "", name: ""}
+      username: "test",
+      userid: "abc",
     }
   },
 
@@ -40,24 +41,26 @@ export default {
     fetch(`${process.env.VUE_APP_BASE_URL}/user`)
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
         this.users = json;
       })
       .catch((error) => console.error(error));
   },
 
   methods: {
-    reset(event) {
-      this.resetData = true
-      let parent = event.target.parentElement
-
-      this.userinfos.id = parent.getAttribute('card-id');
-      this.userinfos.name = parent.getAttribute('user-name');
-
-      this.$refs["userModal"].fetchCurrentDrinks();
-      this.$refs["userModal"].fetchBoughtDrinks();
+    reset(user) {
+      console.log("reset event");
+      //this.resetData = true;
+      this.username = user.name;
+      this.userid = user._id;
+      console.log("name:" +this.username);
+      console.log("id:" + this.userid);
+      this.$nextTick(function() {
+        this.$refs["userModal"].fetchCurrentDrinks();
+        this.$refs["userModal"].fetchBoughtDrinks();
+      });
     },
     resetted() {
+      console.log("resetted");
       this.resetData = false
     }
   }

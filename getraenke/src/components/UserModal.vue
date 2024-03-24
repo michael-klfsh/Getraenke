@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-dialog-scrollable">
             <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="userModalLabel">{{ data.name }}</h1>
+                <h1 class="modal-title fs-5" id="userModalLabel">{{ username }}</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -30,8 +30,9 @@
             BuyDrink
         },
         props: {
-            data: Object,
-            reset: Boolean
+            reset: Boolean,
+            username: String,
+            userid : String,
         },
 
         data() {
@@ -49,7 +50,7 @@
             buyDrinks() {
                 let form = document.getElementById('drink-form')
                 let drinks = form.getElementsByTagName('input')
-                let userId = this.data.id
+                let userId = this.userid
                 console.log('UserId: ' + userId)
                 for(let i=0; i<drinks.length; i++) {
                     let data = {
@@ -68,26 +69,25 @@
             },
 
             fetchCurrentDrinks() {
+                console.log("fetch drinks");
                 fetch(`${process.env.VUE_APP_BASE_URL}/getraenke`)
                     .then((response) => response.json())
                     .then((json) => {
-                        console.log(json);
                         this.drinks = json;
                     })
                     .catch((error) => console.error(error));
             },
 
             fetchBoughtDrinks() {
-                fetch(`${process.env.VUE_APP_BASE_URL}/user/${this.data.id}/getraenk`)
+                console.log("fetch bought drinks");
+                fetch(`${process.env.VUE_APP_BASE_URL}/user/${this.userid}/getraenk`)
                     .then((response) => response.json())
                     .then((json) => {
                         console.log(json);
                         let group = Object.groupBy(json, ({ drinkId }) => drinkId);
-                        console.log(group);
                         for(const [key, value] of Object.entries(group)) {
                             this.amount[key] = value.reduce((n, {amount}) => n + parseInt(amount), 0);
                         }
-                        console.log(this.amount);
                 })
             }
 

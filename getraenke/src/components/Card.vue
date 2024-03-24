@@ -17,7 +17,7 @@
     props: {
       vorname: String,
       nachname: String,
-      id: Number,
+      id: String,
     },
 
     computed: {
