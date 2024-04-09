@@ -10,7 +10,7 @@
       @click="reset(user)"
     />
     </div>
-    <user-modal :username="username" :userid="userid" :reset="resetData" @resetted="resetted" ref="userModal"/>
+    <user-modal :username="username" :userid="userid" ref="userModal"/>
     <add-user-modal/>
     <button type="button" id="add-user" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">+</button>
 </template>
@@ -31,7 +31,6 @@ export default {
   data() {
     return {
       users: [],
-      resetData: false,
       username: "test",
       userid: "abc",
     }
@@ -49,7 +48,6 @@ export default {
   methods: {
     reset(user) {
       console.log("reset event");
-      //this.resetData = true;
       this.username = user.name;
       this.userid = user._id;
       console.log("name:" +this.username);
@@ -59,10 +57,6 @@ export default {
         this.$refs["userModal"].fetchBoughtDrinks();
       });
     },
-    resetted() {
-      console.log("resetted");
-      this.resetData = false
-    }
   }
 }
 </script>

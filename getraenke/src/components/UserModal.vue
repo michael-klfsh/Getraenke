@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <div id="drink-form">
                     <buy-drink v-for="drink in drinks" :key="drink._id"
-                        :name="drink.name" :price="drink.price" :id="drink._id" :amount="amount[drink._id]" :reset="reset" @resetted="sendResetted"/>
+                        :name="drink.name" :price="drink.price" :id="drink._id" :amount="amount[drink._id]" :reset="this.CountResetTrigger"/>
                 </div>
             </div>
             <div class="modal-footer">
@@ -30,7 +30,6 @@
             BuyDrink
         },
         props: {
-            reset: Boolean,
             username: String,
             userid : String,
         },
@@ -39,14 +38,11 @@
             return {
                 drinks: [],
                 amount: [],
+                CountResetTrigger: false,
             }
         },
 
         methods: {
-            sendResetted() {
-                this.$emit("resetted")
-            },
-
             buyDrinks() {
                 let form = document.getElementById('drink-form')
                 let drinks = form.getElementsByTagName('input')
@@ -80,15 +76,17 @@
 
             fetchBoughtDrinks() {
                 console.log("fetch bought drinks");
+                this.amount = [];
                 fetch(`${process.env.VUE_APP_BASE_URL}/user/${this.userid}/getraenk`)
                     .then((response) => response.json())
                     .then((json) => {
                         console.log(json);
+                        this.CountResetTrigger = ! this.CountResetTrigger;
                         let group = Object.groupBy(json, ({ drinkId }) => drinkId);
                         for(const [key, value] of Object.entries(group)) {
                             this.amount[key] = value.reduce((n, {amount}) => n + parseInt(amount), 0);
                         }
-                })
+                });
             }
 
         }

@@ -1,7 +1,7 @@
 <template>
     <div class="mb-3 input-group">
         <label v-bind:for="id">{{ name }} (Preis: {{ price }}):<br>
-            <div class="sub-title">gekauft: {{ amount }}</div>
+            <div class="sub-title">gekauft: {{ Amount }}</div>
         </label>
         <button id="down" class="btn btn-outline-secondary left" type="button" @click="decrement">-</button>
         <input type="number" :id="id" class="form-control" v-model="this.count" v-bind:price="price" readonly>
@@ -26,6 +26,17 @@
         }
     },
 
+    computed: {
+        Amount() {
+            if(this.amount == null) {
+                return 0;
+            }
+            else {
+                return this.amount;
+            }
+        },
+    },
+
     methods: {
         increment() {
             if(this.count < 10) {
@@ -42,16 +53,15 @@
             else {
                 this.count = 0
             }
+        }, 
+        resetCount() {
+            this.count = 0;
         }
     },
 
     watch: {
         reset: function() {
-            if(this.reset)
-            {
-                this.count = 0
-                this.$emit("resetted")
-            }
+            this.resetCount();
         }
     }
   }
